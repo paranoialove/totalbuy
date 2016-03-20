@@ -1,0 +1,8 @@
+{
+    "attributes": {
+        "minlength": {
+            "context": "input"
+        }
+    },
+    "elements": {}
+}
