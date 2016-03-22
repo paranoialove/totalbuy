@@ -15,8 +15,6 @@ import uuu.totalbuy.domain.TotalBuyException;
  */
 public class ProductService {
     private RDBProductsDAO dao = new RDBProductsDAO();
-    
-    
 
     public void insert(Product data) throws TotalBuyException {
         dao.insert(data);
@@ -41,6 +39,12 @@ public class ProductService {
     public List<Product> getByName(String data) throws TotalBuyException {
         return dao.getByName(data);
     }
+
+    public static void main(String[] args) {
+        RDBProductsDAO.main(args);
+    }
+    
+   
 
     public void addPrice(double unitPrice) {
         unitPrice = unitPrice +10;

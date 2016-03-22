@@ -16,8 +16,7 @@ import uuu.totalbuy.domain.*;
  *
  * @author PattyTai
  */
-public class RDBCustomersDAO implements DAOInterface<String, Customer> {   
-//依照interface的順序<主鍵值型別    整個實體資料型別'>
+public class RDBCustomersDAO implements DAOInterface<String, Customer> {
 
     private static final String INSERT_SQL = "INSERT INTO customers "
             + "(id,name,gender,password,email,birthday,phone,address,married,blood_type,type,discount) "

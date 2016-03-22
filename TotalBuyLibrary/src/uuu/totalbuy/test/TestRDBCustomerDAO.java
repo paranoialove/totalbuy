@@ -6,6 +6,8 @@
 package uuu.totalbuy.test;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import uuu.totalbuy.domain.Customer;
 import uuu.totalbuy.domain.TotalBuyException;
 import uuu.totalbuy.model.RDBCustomersDAO;

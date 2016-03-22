@@ -19,9 +19,9 @@ import uuu.totalbuy.domain.TotalBuyException;
  * @author Administrator
  */
 class RDBProductsDAO implements DAOInterface<Integer, Product> {
-    //先把表單名抽出  以防之後修改  
+
     private static final String TABLE = "products";
-    
+
     private static final String INSERT_SQL_AUTO_ID = "INSERT INTO " + TABLE
             + " (name, unit_price, free, stock, description, url, type, discount, status)"
             + " VALUES(?,?,?,?,?,?,?,?,?)";
@@ -51,10 +51,8 @@ class RDBProductsDAO implements DAOInterface<Integer, Product> {
 
         try (Connection connection = RDBConnection.getConnection(); //1. 取得連線
                 PreparedStatement pstmt = //2.建立指令
-                connection.prepareStatement(
-                        data.getId() > 0 ? INSERT_SQL : INSERT_SQL_AUTO_ID,
-                        data.getId() > 0 ? Statement.NO_GENERATED_KEYS : Statement.RETURN_GENERATED_KEYS
-                );) {
+                connection.prepareStatement(data.getId() > 0 ? INSERT_SQL : INSERT_SQL_AUTO_ID,
+                        data.getId() > 0 ? Statement.NO_GENERATED_KEYS : Statement.RETURN_GENERATED_KEYS);) {
             pstmt.setString(1, data.getName());
             pstmt.setDouble(2, data instanceof Outlet ? ((Outlet) data).getListPrice() : data.getUnitPrice());
             pstmt.setBoolean(3, data.isFree());
@@ -68,16 +66,11 @@ class RDBProductsDAO implements DAOInterface<Integer, Product> {
                 pstmt.setInt(8, 0);
             }
             pstmt.setInt(9, data.getStatus());
-            
-                       
-            //強迫給號的  就讓他設定  不用回傳
             if (data.getId() > 0) {
                 pstmt.setInt(10, data.getId());
             }
-            int rows = pstmt.executeUpdate();            
+            int rows = pstmt.executeUpdate();
             assert (rows == 1) : "新增產品資料結構有誤:" + data;
-            
-            //如果產品代號沒有給值，就自動給號   要回傳自動給的號碼
             if (data.getId() <= 0) {
                 try (ResultSet rs = pstmt.getGeneratedKeys();) {
                     if (rs.next()) {
@@ -113,8 +106,7 @@ class RDBProductsDAO implements DAOInterface<Integer, Product> {
             }
             pstmt.setInt(9, data.getStatus());
             pstmt.setInt(10, data.getId());
-            int rows = pstmt.executeUpdate();    
-            //------------------要告訴後面去執行  重要!!!!----------------------
+            int rows = pstmt.executeUpdate();
             assert (rows == 1) : "修改產品資料結構有誤:" + data;
         } catch (SQLException ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "修改產品失敗: " + data, ex);

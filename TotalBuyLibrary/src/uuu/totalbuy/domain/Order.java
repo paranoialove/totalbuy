@@ -7,7 +7,7 @@ package uuu.totalbuy.domain;
 
 /**
  *
- * @author Administrator
+ * @author PattyTai
  */
 public class Order {
     

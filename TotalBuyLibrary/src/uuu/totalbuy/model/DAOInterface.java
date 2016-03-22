@@ -12,7 +12,7 @@ import uuu.totalbuy.domain.TotalBuyException;
  *
  * @author Administrator
  */
-public interface DAOInterface <K, T> {  // <主鍵值型別    整個實體資料型別'>
+public interface DAOInterface <K, T> {
     void insert(T data) throws TotalBuyException;
     void update(T data) throws TotalBuyException;
     void delete(T data) throws TotalBuyException;

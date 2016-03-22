@@ -13,46 +13,45 @@ import uuu.totalbuy.domain.TotalBuyException;
  *
  * @author PattyTai
  */
-public class RDBConnection {
+public class RDBConnection {    
+    private static final String driver;//= "com.mysql.jdbc.Driver";
+    private static final String url;// = "jdbc:mysql://localhost:3306/totalbuy?zeroDateTimeBehavior=convertToNull";
+    private static final String userid;// = "root";
+    private static final String password;// = "1234";
 
-    private static final String driver;
-    private static final String url;
-    private static final String userid;
-    private static final String password;
-
-    //靜態初始化 static initializer
-    static {
-        //預先讀取設定檔 使用完整檔名
+    static{
         ResourceBundle bundle = ResourceBundle.getBundle("uuu.totalbuy.model.JDBCSettings");
+        
         String dr = bundle.getString("jdbc.driver");
-        if (dr != null) {
+        if(dr!=null){
             driver = dr;
-        } else {
-            driver = "com.mysql.jdbc.Driver";
+        }else{
+            driver = "com.mysql.jdbc.Driver";            
         }
-
+        
         String ur = bundle.getString("jdbc.url");
-        if (ur != null) {
+        if(ur!=null){
             url = ur;
-        } else {
-            url = "jdbc:mysql://localhost:3306/totalbuy?zeroDateTimeBehavior=convertToNull";
+        }else{
+            url="jdbc:mysql://localhost:3306/totalbuy?zeroDateTimeBehavior=convertToNull";
         }
-
+        
         String id = bundle.getString("jdbc.userid");
-        if (id != null) {
+        if(id!=null){
             userid = id;
-        } else {
-            userid = "root";
+        }else{
+            userid="root";
         }
 
-        String ps = bundle.getString("jdbc.password");
-        if (ps != null) {
-            password = ps;
-        } else {
-            password = "123456789";
+        String pwd = bundle.getString("jdbc.password");
+        if(pwd!=null){
+            password = pwd;
+        }else{
+            password="1234";
         }
+
     }
-
+    
     public static Connection getConnection() throws TotalBuyException {
         Connection c = null;
         try {
