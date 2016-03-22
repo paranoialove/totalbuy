@@ -12,7 +12,7 @@
         <h1>登入</h1>
         <div id="nav">
             <a href="index.jsp">首頁</a> | 
-            <a href="register.html">註冊</a> | 
+            <a href="register.jsp">註冊</a> | 
             <a href="login.jsp">登入</a> | 
             <a href="products_list.html">產品清單</a>
         </div>

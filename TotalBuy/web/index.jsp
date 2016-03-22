@@ -33,7 +33,7 @@ and open the template in the editor.
         <div id="nav">
             <span>
                 <a href="<%=application.getContextPath()%>/index.jsp">首頁</a> | 
-                <a href="<%=application.getContextPath()%>/register.html">註冊</a> | 
+                <a href="<%=application.getContextPath()%>/register.jsp">註冊</a> | 
                 <a href="<%=application.getContextPath()%>/login.jsp">登入</a> | 
                 <a href="<%=application.getContextPath()%>/products_list.html">產品清單</a> |             
                 <a href="<%=application.getContextPath()%>/cart.html">購物車</a> |            

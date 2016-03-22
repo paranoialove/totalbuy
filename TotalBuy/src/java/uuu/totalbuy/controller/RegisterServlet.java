@@ -6,10 +6,9 @@
 package uuu.totalbuy.controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import uuu.totalbuy.domain.BloodType;
 import uuu.totalbuy.domain.Customer;
+import uuu.totalbuy.domain.TotalBuyException;
 import uuu.totalbuy.model.CustomerService;
 
 /**
@@ -38,7 +38,7 @@ public class RegisterServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         List<String> errors = new ArrayList<>();
-        
+
         request.setCharacterEncoding("UTF-8");
         //1. 取得並檢查register.html中的表單資料
         String id = request.getParameter("id");
@@ -53,8 +53,8 @@ public class RegisterServlet extends HttpServlet {
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
         String married = request.getParameter("married");
-        String bloodType = request.getParameter("blood_type");        
-        
+        String bloodType = request.getParameter("blood_type");
+
         if (id == null || (id = id.trim()).length() == 0) {
             errors.add("必須輸入會員帳號");
         }
@@ -93,55 +93,46 @@ public class RegisterServlet extends HttpServlet {
                 c.setPassword(password1);
                 c.setGender(gender.charAt(0));
                 c.setEmail(email);
-                
+
                 c.setBirthday(birthday);
                 c.setPhone(phone);
                 c.setAddress(address);
-                c.setMarried(married!=null);
+                c.setMarried(married != null);
                 c.setBloodType(
-                       bloodType==null || bloodType.length()==0?null:BloodType.valueOf(bloodType));
-                
-                
+                        bloodType == null || bloodType.length() == 0 ? null : BloodType.valueOf(bloodType));
+
                 CustomerService service = new CustomerService();
                 service.register(c);
 
-                //3.1 產生成功回應
-                response.setContentType("text/html");
-                response.setCharacterEncoding("UTF-8");
-                try (PrintWriter out = response.getWriter()) {
-                    /* TODO output your page here. You may use following sample code. */
-                    out.println("<!DOCTYPE html>");
-                    out.println("<html>");
-                    out.println("<head>");
-                    out.println("<title>Servlet RegisterServlet</title>");
-                    out.println("</head>");
-                    out.println("<body>");
-                    out.println("<h1>" + this.getServletContext().getInitParameter("app-name") + "</h1>");
-                    out.println("<h2>註冊成功: " + c + "</h2>");
-                    out.println("</body>");
-                    out.println("</html>");
-                    return;
+                //3.1 forward to /register_ok.jsp
+                request.setAttribute("customer", c);
+
+                RequestDispatcher dispatcher
+                        = request.getRequestDispatcher("/register_ok.jsp");
+                dispatcher.forward(request, response);
+
+                return;
+
+            } catch (TotalBuyException ex) {
+                if (ex.getCause()!=null){
+                    this.log("新增失敗", ex);
+                    errors.add("新增失敗: " + ex.getCause().getMessage());
+                }else{
+                    errors.add(ex.toString());
                 }
-            } catch (Exception ex) {
+            }catch (Exception ex) {
                 errors.add(ex.toString());
             }
         }
 
-        //3.2 產生錯誤回應
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet RegisterServlet</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>" + this.getServletContext().getInitParameter("app-name") + "</h1>");
-            out.println("<p>註冊失敗: " + errors + "</p>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+        //3.2 forward to /register.jsp
+        request.setAttribute("errors", errors);
+
+        RequestDispatcher dispatcher
+                = request.getRequestDispatcher("/register.jsp");
+        dispatcher.forward(request, response);
+
+        return;
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
