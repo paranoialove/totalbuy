@@ -19,6 +19,10 @@
             <param-name>welcome</param-name>
             <param-value>歡迎</param-value>
         </init-param>
+        <init-param>
+            <param-name>charset</param-name>
+            <param-value>big5</param-value>
+        </init-param>
     </servlet>
     <servlet-mapping>
         <servlet-name>HelloServletTW</servlet-name>
@@ -40,13 +44,50 @@
         <url-pattern>/en-us/hello.php</url-pattern>
         <url-pattern>/en-us/hello.view</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>HelloJSP</servlet-name>
+        <jsp-file>/WEB-INF/hello.jsp</jsp-file>
+        <init-param>
+            <param-name>welcome</param-name>
+            <param-value>哈囉</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>HelloJSP</servlet-name>
+        <url-pattern>/hello.jsp</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>LoginImageCheckCodeServlet</servlet-name>
+        <servlet-class>uuu.totalbuy.view.ImageCheckCodeServlet</servlet-class>
+        <init-param>
+            <param-name>length</param-name>
+            <param-value>4</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LoginImageCheckCodeServlet</servlet-name>
+        <url-pattern>/images/check_code.jpg</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>RegisterImageCheckCodeServlet</servlet-name>
+        <servlet-class>uuu.totalbuy.view.ImageCheckCodeServlet</servlet-class>
+        <init-param>
+            <param-name>length</param-name>
+            <param-value>6</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LoginImageCheckCodeServlet</servlet-name>
+        <url-pattern>/images/reg_check_code.jpg</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
         </session-timeout>
     </session-config>
-    <init-param>
-        <param-name>charset</param-name>
-        <param-value>big5</param-value>
-    </init-param>
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>index.html</welcome-file>
+        <welcome-file>default.aspx</welcome-file>
+    </welcome-file-list>
 </web-app>

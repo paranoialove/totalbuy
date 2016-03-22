@@ -35,13 +35,24 @@ public class LoginCountListener implements ServletContextListener, HttpSessionLi
         try (FileReader in = new FileReader(path);) {
             props.load(in);
             application.log("counters讀取檔案成功: " + path);
-            
-            //待續...            
-            
+
+            //待續...
+            Enumeration<String> names = (Enumeration<String>)props.propertyNames();
+            while (names.hasMoreElements()) {
+                String name = names.nextElement();
+                String value = props.getProperty(name);
+                System.out.println(name + ":" + value);
+                try {
+                    application.setAttribute(name, Integer.valueOf(value));
+                } catch (Exception ex) {
+                    application.log("屬性[" + name + "]="+value+"無法轉換為整數", ex);
+                    application.setAttribute(name, value);
+                }
+            }
         } catch (IOException ex) {
             System.out.println("無法讀取檔案:" + path);
             application.log("無法讀取檔案:" + path, ex);
-        }    
+        }
     }
 
     @Override

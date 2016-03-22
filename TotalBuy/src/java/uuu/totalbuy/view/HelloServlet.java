@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package uuu.totalbuy.view;
 
 import java.io.IOException;
@@ -14,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- *
  * @author PattyTai
  */
 //@WebServlet(name = "HelloServlet", urlPatterns = {"/hello.asp", "/hello.php", "/hello.view"})
