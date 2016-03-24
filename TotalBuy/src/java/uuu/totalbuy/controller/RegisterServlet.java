@@ -82,6 +82,7 @@ public class RegisterServlet extends HttpServlet {
             errors.add("必須輸入驗證碼");
         } else {
             //....
+            
         }
 
         if (errors.size() == 0) {

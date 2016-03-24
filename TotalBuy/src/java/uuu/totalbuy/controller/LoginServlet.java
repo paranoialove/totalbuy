@@ -6,7 +6,6 @@
 package uuu.totalbuy.controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
@@ -16,7 +15,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.catalina.connector.Request;
+import javax.servlet.http.HttpSession;
 import uuu.totalbuy.domain.Customer;
 import uuu.totalbuy.domain.TotalBuyException;
 import uuu.totalbuy.model.CustomerService;
@@ -45,6 +44,7 @@ public class LoginServlet extends HttpServlet {
         List<String> errors = new ArrayList<>();
 
         //1. 讀取並檢查請求中的表單資料
+        HttpSession session = request.getSession();        
         String id = request.getParameter("id");
         String password = request.getParameter("password");
         String checkCode = request.getParameter("check_code");
@@ -58,9 +58,15 @@ public class LoginServlet extends HttpServlet {
         }
 
         if (checkCode == null || checkCode.length() == 0) {
-            errors.add("必須輸入檢核碼");
+            errors.add("必須輸入驗證碼");
         } else {
             //檢查檢核碼是否符合圖片中內容
+            String oldCheckCode = (String)session.getAttribute("LoginImageCheckCodeServlet");
+            if(!checkCode.equalsIgnoreCase(oldCheckCode)){
+                errors.add("驗證碼不正確");
+            }else{
+                session.removeAttribute("LoginImageCheckCodeServlet");
+            }
         }
 
         if (errors != null && errors.size() == 0) {
@@ -71,6 +77,9 @@ public class LoginServlet extends HttpServlet {
                 System.out.println("c:" + c);
                 if (c != null) {
                     ServletContext application = this.getServletContext();
+                    
+                    //session.removeAttribute("LoginImageCheckCodeServlet");
+                    
                     Integer count = (Integer) application.getAttribute("app.login.count");
                     if (count == null) {
                         count = 30005;
@@ -78,12 +87,16 @@ public class LoginServlet extends HttpServlet {
                         count++;
                     }
                     application.setAttribute("app.login.count", count);
+                    //session.setMaxInactiveInterval(10); //10 seconds
 
-                    //3.1 轉交給/login_ok.jsp
-                    request.setAttribute("user", c);
-
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("/login_ok.jsp");
-                    dispatcher.forward(request, response);
+                    //3.1.old forward給首頁
+                    //request.setAttribute("user", c);                   
+                    //RequestDispatcher dispatcher = request.getRequestDispatcher("/");                    
+                    //dispatcher.forward(request, response);      
+                    
+                    //3.1 redirect給首頁
+                    session.setAttribute("user", c);                   
+                    response.sendRedirect(request.getContextPath());
                     return;
                 }
             } catch (TotalBuyException ex) {
@@ -97,7 +110,7 @@ public class LoginServlet extends HttpServlet {
             }
         }
 
-        //3.2 轉交給/login.jsp
+        //3.2 內部轉交給/login.jsp
         request.setAttribute("errors", errors);
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("/login.jsp");

@@ -1,5 +1,6 @@
+<%@page import="uuu.totalbuy.domain.Customer"%>
 <%@page pageEncoding="UTF-8" %>
-<%@page contentType="text/html" %>
+<%@page contentType="text/html" info="歡迎" %>
 
 <!DOCTYPE html>
 <!--
@@ -9,7 +10,7 @@ and open the template in the editor.
 -->
 <html>
     <head>
-        <title>TODO supply a title</title>
+        <title><%= this.getServletInfo()%></title>
         <meta charset='UTF-8'>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!--        <meta http-equiv="refresh" content="10; url=http://www.uuu.com.tw"/>-->
@@ -28,13 +29,24 @@ and open the template in the editor.
     </head>
     <body>
         <div id="header">
+            <%
+                Customer user = (Customer) session.getAttribute("user");
+            %>
+
             <h1>首頁</h1>
+            <h2><%= this.getServletInfo()%>!<%= user != null ? user.getName() : ""%></h2>
         </div>
         <div id="nav">
             <span>
                 <a href="<%=application.getContextPath()%>/index.jsp">首頁</a> | 
-                <a href="<%=application.getContextPath()%>/register.jsp">註冊</a> | 
-                <a href="<%=application.getContextPath()%>/login.jsp">登入</a> | 
+                <%
+                    if (user == null) {
+                %>
+                    <a href="<%=application.getContextPath()%>/register.jsp">註冊</a> | 
+                    <a href="<%=application.getContextPath()%>/login.jsp">登入</a> | 
+                <%} else {%>
+                    <a href="<%=application.getContextPath()%>/user/logout.do">登出</a> | 
+                <%}%>
                 <a href="<%=application.getContextPath()%>/products_list.html">產品清單</a> |             
                 <a href="<%=application.getContextPath()%>/cart.html">購物車</a> |            
             </span>
@@ -57,6 +69,7 @@ and open the template in the editor.
                  location.href = "http://www.google.com";
                  */
             </script>     
+            <p>time out: <%= session.getMaxInactiveInterval()%>
         </div>
         <div id="footer">
             版權所有&copy;TotalBuy.com.tw
