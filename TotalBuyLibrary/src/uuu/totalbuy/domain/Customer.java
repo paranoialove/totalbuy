@@ -11,6 +11,7 @@ public class Customer {
 
     public static final char MALE = 'M';
     public static final char FEMALE = 'F';
+    public static final DateFormat birthdayFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     /**
      * id為必要欄位,且符合ROC ID規則
@@ -191,15 +192,28 @@ public class Customer {
     }
 
     public void setBirthday(String date) throws TotalBuyException {
+        if (date == null || (date = date.trim()).length() == 0) {
+            this.birthday = null;
+            return;
+        }
         try {
             //DateFormat df = DateFormat.getDateInstance();//yyyy/M/d
-            DateFormat df = new SimpleDateFormat("yyyy/M/d");//yyyy/M/d
-            Date d = df.parse(date);
+            date = date.replace('/', '-');
+            //DateFormat df = new SimpleDateFormat("yyyy/M/d");//yyyy/M/d
+            Date d = birthdayFormat.parse(date);
             this.setBirthday(d);
         } catch (ParseException ex) {
             Logger.getLogger(Customer.class.getName()).log(
                     Level.SEVERE, "日期格式不正確!", ex);
             throw new TotalBuyException("日期格式不正確!", ex);
+        }
+    }
+
+    public String getBirthdayString() {
+        if (this.birthday != null) {
+            return birthdayFormat.format(this.birthday);
+        } else {
+            return "";
         }
     }
 
@@ -293,12 +307,12 @@ public class Customer {
         }
         idValue = idValue.trim().toUpperCase();
         if (idValue.matches(idPattern)) { //regular expression            
-            
+
             char lastChar = getLastCharFromId(idValue.substring(0, 9));
 
             //4. 將總和 mod 10 餘數為0: 正確
             System.out.println("lastChar = " + lastChar);
-            return (lastChar==idValue.charAt(9));
+            return (lastChar == idValue.charAt(9));
         }
         return false;
     }
@@ -306,28 +320,28 @@ public class Customer {
     private static final int[] firstChars = new int[]{10, 11, 12, 13, 14, 15, //A ~ F
         16, 17, 34, 18, 19, 20, 21, 22, 35, 23, //G ~ P
         24, 25, 26, 27, 28, 29, 32, 30, 31, 33}; //Q ~ Z
-    
+
     public static char getLastCharFromId(String id9) {
         //2. 將第一個英文字元轉為對應的數字
         char firstChar = id9.charAt(0);
-        int index = firstChar-'A';
-        
-        int firstNumber=0;
-        if(index>=0 && index<firstChars.length){
-            firstNumber= firstChars[index];
-        }else{
-            assert false:"身分證號首碼不正確: " + firstChar;
+        int index = firstChar - 'A';
+
+        int firstNumber = 0;
+        if (index >= 0 && index < firstChars.length) {
+            firstNumber = firstChars[index];
+        } else {
+            assert false : "身分證號首碼不正確: " + firstChar;
         }
         //System.out.println("firstNumber = " + firstNumber);
-        assert (firstNumber>=10 && firstNumber<=35): "firstNumber = " + firstNumber;
+        assert (firstNumber >= 10 && firstNumber <= 35) : "firstNumber = " + firstNumber;
 
         //3. 依據規則加總
         int sum = (firstNumber / 10) + (firstNumber % 10) * 9;
         for (int i = 8; i >= 1; i--) {
             sum = sum + (id9.charAt(9 - i) - '0') * i;
         }
-        char lastChar = (char)((10-(sum%10))%10 +'0');  //sum = sum + (id9.charAt(9) - '0') * 1;
-        assert (lastChar>='0' && lastChar<='9'):"身分證號末碼計算不正確: (" + lastChar + ")";        
+        char lastChar = (char) ((10 - (sum % 10)) % 10 + '0');  //sum = sum + (id9.charAt(9) - '0') * 1;
+        assert (lastChar >= '0' && lastChar <= '9') : "身分證號末碼計算不正確: (" + lastChar + ")";
         return lastChar;
     }
 
