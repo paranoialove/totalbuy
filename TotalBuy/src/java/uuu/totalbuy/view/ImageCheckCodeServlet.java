@@ -98,7 +98,7 @@ public class ImageCheckCodeServlet extends HttpServlet {
         //0. 根據請求來判斷是否更新亂數文字
         String rand = null;
         HttpSession session = request.getSession();//15章才介紹
-        String s = request.getParameter("get");
+        String s = request.getParameter("get");//更新圖片
         if (s == null) {
             rand = (String) session.getAttribute(this.getServletName());
         } else {

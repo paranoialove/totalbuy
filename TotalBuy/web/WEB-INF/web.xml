@@ -12,6 +12,18 @@
         <description>ServletContextListener, HttpSessionListener</description>
         <listener-class>uuu.totalbuy.web.LoginCountListener</listener-class>
     </listener>
+    <error-page>
+        <exception-type>java.lang.Exception</exception-type>
+        <location>/WEB-INF/error.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/error.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>405</error-code>
+        <location>/WEB-INF/error.jsp</location>
+    </error-page>
     <servlet>
         <servlet-name>HelloServletTW</servlet-name>
         <servlet-class>uuu.totalbuy.view.HelloServlet</servlet-class>

@@ -54,7 +54,7 @@ public class RegisterServlet extends HttpServlet {
         String address = request.getParameter("address");
         String married = request.getParameter("married");
         String bloodType = request.getParameter("blood_type");
-
+        
         if (id == null || (id = id.trim()).length() == 0) {
             errors.add("必須輸入會員帳號");
         }

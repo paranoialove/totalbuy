@@ -12,6 +12,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,6 +47,7 @@ public class LoginServlet extends HttpServlet {
         //1. 讀取並檢查請求中的表單資料
         HttpSession session = request.getSession();        
         String id = request.getParameter("id");
+        String memory = request.getParameter("memory");
         String password = request.getParameter("password");
         String checkCode = request.getParameter("check_code");
 
@@ -80,6 +82,7 @@ public class LoginServlet extends HttpServlet {
                     
                     //session.removeAttribute("LoginImageCheckCodeServlet");
                     
+                    //計算登入人次
                     Integer count = (Integer) application.getAttribute("app.login.count");
                     if (count == null) {
                         count = 30005;
@@ -88,7 +91,24 @@ public class LoginServlet extends HttpServlet {
                     }
                     application.setAttribute("app.login.count", count);
                     //session.setMaxInactiveInterval(10); //10 seconds
+                    
+                    //add cookie
+                    Cookie cookie = new Cookie("user_id", c.getId());
+                    cookie.setMaxAge(0); //delete cookie
+                    if(memory!=null){
+                        cookie.setMaxAge(7*24*60*60); //7 days
+                    }
+                    response.addCookie(cookie);
+                    System.out.println(cookie);
 
+                    Cookie cookie2 = new Cookie("memory", "checked");
+                    cookie2.setMaxAge(0); //delete cookie
+                    if(memory!=null){
+                        cookie2.setMaxAge(7*24*60*60); //7 days
+                    }
+                    response.addCookie(cookie2);
+                    
+                    
                     //3.1.old forward給首頁
                     //request.setAttribute("user", c);                   
                     //RequestDispatcher dispatcher = request.getRequestDispatcher("/");                    

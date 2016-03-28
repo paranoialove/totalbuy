@@ -7,12 +7,20 @@
 <%@page import="uuu.totalbuy.domain.BloodType"%>
 <%@page import="uuu.totalbuy.domain.Customer"%>
 <%@page import="java.util.List"%>
-<%@page contentType="text/html" pageEncoding="UTF-8" info="會員註冊"%>
+<%@page contentType="text/html" pageEncoding="UTF-8" info="修改會員"%>
 <jsp:include page="/WEB-INF/subviews/header.jsp" >
     <jsp:param name="subtitle" value="<%= this.getServletInfo()%>" />
 </jsp:include>
 <div id="article">
     <%        
+        Customer user = (Customer)session.getAttribute("user");        
+        if(user==null){
+            response.sendRedirect(request.getContextPath()+"/login.jsp");
+            return;
+        }
+        //if(user.getBirthday()==null){
+        //    user.setBirthday("1995/3/3");
+        //}
         List<String> errors = (List<String>) request.getAttribute("errors");
         if (errors != null && errors.size() > 0) {
     %>
@@ -24,32 +32,34 @@
     <%
         }
     %>            
-    <form method="POST" action="register.do">
+    <form method="POST" action="update.jsp">
         <p>
             <label for="userid">會員帳號:</label>
             <input type="text" id="userid" name="id" placeholder="請輸入帳號" pattern="[A-Za-z][12]\d{8}" required
-                   value="<%= request.getParameter("id") == null ? "" : request.getParameter("id")%>">
+                   value="<%= user.getId()%>" readonly>
         </p>
         <p>
             <label for="name">會員姓名:</label>
             <input type="text" id="name" name="name" placeholder="請輸入姓名" required
-                   value="<%= request.getMethod().equalsIgnoreCase("post") ? request.getParameter("name") : ""%>" >            
+                   value="<%= request.getMethod().equalsIgnoreCase("post") ? request.getParameter("name") : user.getName()%>" >            
         </p>
         <p>
             <label for="pwd1">會員密碼:</label>
-            <input type="password" id="pwd1" name="password1" minlength="6" maxlength="20" placeholder="請輸入密碼" required>            
+            <input type="password" id="pwd1" name="password1" minlength="6" maxlength="20" placeholder="請輸入密碼">            
         </p>
         <p>
             <label for="pwd2">確認密碼:</label>
-            <input type="password" id="pwd2" name="password2" minlength="6" maxlength="20" placeholder="請輸入確認密碼" required>            
+            <input type="password" id="pwd2" name="password2" minlength="6" maxlength="20" placeholder="請輸入確認密碼">            
         </p>
         <p>              
             <label>會員性別:</label>
             <input type="radio" id="male" name="gender" value='<%= Customer.MALE%>' required 
-                   <%= request.getParameter("gender") != null && request.getParameter("gender").charAt(0) == Customer.MALE ? "checked" : ""%>
+                   <%= request.getParameter("gender") != null && request.getParameter("gender").charAt(0) == Customer.MALE ? "checked" : 
+                           (request.getParameter("gender") == null && user.getGender()==Customer.MALE?"checked":"")%>
                    ><label for="male">男</label>        
             <input type="radio" id="female" name="gender" value="<%= Customer.FEMALE%>" required
-                   <%= request.getParameter("gender") != null && request.getParameter("gender").charAt(0) == Customer.FEMALE ? "checked" : ""%>
+                   <%= request.getParameter("gender") != null && request.getParameter("gender").charAt(0) == Customer.FEMALE ? "checked" : 
+                           (request.getParameter("gender") == null && user.getGender()==Customer.FEMALE?"checked":"")%>
                    ><label for="female">女</label>        
         </p>
         <p>              
@@ -58,9 +68,9 @@
                    value="<%= request.getMethod().equalsIgnoreCase("post") ? request.getParameter("email") : ""%>">
         </p>
         <p>              
-            <label for="birthday">出生日期:</label>
+            <label for="birthday">出生日期(<%= user.getBirthday()!=null?user.getBirthday().getClass().getName():"" %>):</label>
             <input type="date" id="birthday" name="birthday" 
-                   value="<%= request.getMethod().equalsIgnoreCase("post") ? request.getParameter("birthday") : ""%>">
+                   value="<%= request.getMethod().equalsIgnoreCase("post") ? request.getParameter("birthday") : user.getBirthdayString() %>">
         </p>            
         <p>              
             <label for="phone">聯絡電話:</label>
@@ -90,14 +100,14 @@
             </select>
         </p>  
         <p>
-            <img src="images/reg_check_code.jpg" alt="" id='check_image'><a href="javascript:refresh()">更新圖片</a><br>
+            <img src="<%=application.getContextPath()%>/images/reg_check_code.jpg" alt="" id='check_image'><a href="javascript:refresh()">更新圖片</a><br>
             <label for="check_code">驗證碼:</label>
             <input type="text" id="check_code" name="check_code" placeholder="請輸入驗證碼" required       
                    value="${param.check_code}">
             <script>
                 function refresh() {
                     var image = document.getElementById("check_image");
-                    image.src = "images/reg_check_code.jpg?get=" + new Date();
+                    image.src = "<%=application.getContextPath()%>/images/reg_check_code.jpg?get=" + new Date();
                 }
             </script>
         </p>

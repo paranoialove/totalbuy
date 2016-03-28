@@ -85,11 +85,19 @@ public class LoginCountListener implements ServletContextListener, HttpSessionLi
 
     @Override
     public void sessionCreated(HttpSessionEvent se) {
-
+        ServletContext application = se.getSession().getServletContext();
+        
+        Integer visitorsCount = (Integer)application.getAttribute("app.visitors.count");
+        if(visitorsCount==null){
+            visitorsCount = 0;
+        }
+        
+        application.setAttribute("app.visitors.count", ++visitorsCount);
+        
     }
 
     @Override
     public void sessionDestroyed(HttpSessionEvent se) {
-
+        
     }
 }
